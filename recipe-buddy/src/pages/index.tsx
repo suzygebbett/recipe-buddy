@@ -1,12 +1,17 @@
-import { type NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { type NextPage } from "next"
+import Head from "next/head"
+import Link from "next/link"
+import { signIn, signOut, useSession } from "next-auth/react"
 
-import { api } from "@recipe-buddy/utils/api";
+import { api } from "@recipe-buddy/utils/api"
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const hello = api.example.hello.useQuery({ text: "from tRPC" })
+
+  const scrape = api.scrape.useMutation()
+
+  const s = () =>
+    scrape.mutate({ url: "https://www.bbcgoodfood.com/recipes/bellini" })
 
   return (
     <>
@@ -49,22 +54,23 @@ const Home: NextPage = () => {
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
             <AuthShowcase />
+            <button onClick={s}>click me</button>
           </div>
         </div>
       </main>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
 
 const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData } = useSession()
 
   const { data: secretMessage } = api.example.getSecretMessage.useQuery(
     undefined, // no input
-    { enabled: sessionData?.user !== undefined },
-  );
+    { enabled: sessionData?.user !== undefined }
+  )
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
@@ -79,5 +85,5 @@ const AuthShowcase: React.FC = () => {
         {sessionData ? "Sign out" : "Sign in"}
       </button>
     </div>
-  );
-};
+  )
+}

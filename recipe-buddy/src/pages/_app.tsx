@@ -1,10 +1,10 @@
-import { type AppType } from "next/app";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
+import { type AppType } from "next/app"
+import { type Session } from "next-auth"
+import { SessionProvider } from "next-auth/react"
 
-import { api } from "@recipe-buddy/utils/api";
+import { api } from "@recipe-buddy/utils/api"
 
-import "@recipe-buddy/styles/globals.css";
+import "@recipe-buddy/styles/globals.css"
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -14,7 +14,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <Component {...pageProps} />
     </SessionProvider>
-  );
-};
+  )
+}
 
-export default api.withTRPC(MyApp);
+export default api.withTRPC(MyApp)
