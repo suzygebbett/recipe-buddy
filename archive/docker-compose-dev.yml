@@ -14,8 +14,8 @@ services:
 
   backend:
     build:
-      context: ./api
-      dockerfile: ./Dockerfile.dev
+      context: api
+      dockerfile: api/Dockerfile.dev
     volumes:
       - type: bind
         source: ./api
