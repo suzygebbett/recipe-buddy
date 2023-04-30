@@ -1,7 +1,7 @@
 import { createTRPCRouter } from "@recipe-buddy/server/api/trpc"
 import { exampleRouter } from "@recipe-buddy/server/api/routers/example"
 import { grocyRouter } from "@recipe-buddy/server/api/routers/grocy"
-import { scrapeRecipeProcedure } from "@recipe-buddy/server/integrations/scraper/scraper"
+import { recipeRouter } from "@/server/api/routers/recipe"
 
 /**
  * This is the primary router for your server.
@@ -11,7 +11,7 @@ import { scrapeRecipeProcedure } from "@recipe-buddy/server/integrations/scraper
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
   grocy: grocyRouter,
-  scrape: scrapeRecipeProcedure,
+  recipe: recipeRouter,
 })
 
 // export type definition of API

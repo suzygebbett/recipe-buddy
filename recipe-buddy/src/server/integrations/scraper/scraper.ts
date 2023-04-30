@@ -27,6 +27,7 @@ export async function scrapeRecipe(url: string) {
           data: scrapedRecipe.recipeIngredient,
         },
       },
+      imageUrl: scrapedRecipe.image,
     },
   })
 }
