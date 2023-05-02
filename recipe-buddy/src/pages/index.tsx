@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 const Home: NextPage = () => {
   const utils = api.useContext()
@@ -29,6 +30,8 @@ const Home: NextPage = () => {
       await utils.recipe.getAll.invalidate()
     },
   })
+
+  const router = useRouter()
 
   return (
     <>
@@ -77,7 +80,13 @@ const Home: NextPage = () => {
                       >
                         Delete
                       </Button>
-                      <Button>Add to Grocy</Button>
+                      <Button
+                        onClick={() => {
+                          router.push(`/recipes/${a.id}`)
+                        }}
+                      >
+                        Add to Grocy
+                      </Button>
                     </div>
                   </CardFooter>
                 </Card>
@@ -94,11 +103,6 @@ export default Home
 
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession()
-
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  )
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">

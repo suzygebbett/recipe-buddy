@@ -13,4 +13,12 @@ export const recipeRouter = createTRPCRouter({
     .mutation(({ input }) => {
       return prisma.recipe.delete({ where: { id: input.recipeId } })
     }),
+  getById: protectedProcedure
+    .input(z.object({ recipeId: z.string().cuid() }))
+    .query(async ({ ctx, input }) => {
+      return prisma.recipe.findUniqueOrThrow({
+        where: { id: input.recipeId },
+        include: { steps: true, ingredients: true },
+      })
+    }),
 })
