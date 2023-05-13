@@ -1,11 +1,14 @@
 import { env } from "@recipe-buddy/env.mjs"
 import axios, { AxiosHeaders } from "axios"
 import {
+  GrocyCreationResponse,
   GrocyProduct,
   GrocyQuantityUnit,
+  GrocyRecipe,
+  GrocyRecipePos,
 } from "@recipe-buddy/server/integrations/grocy/types"
 
-type GrocyEntity = "quantity_units" | "products"
+type GrocyEntity = "quantity_units" | "products" | "recipes" | "recipes_pos"
 class GrocyClient {
   private readonly apiUrl: string
   private readonly apiKey: string
@@ -28,8 +31,16 @@ class GrocyClient {
     return axios.post(`${this.apiUrl}${url}`, body, { headers: this.headers })
   }
 
+  private axiosPut(url: string, body: Record<string, unknown> | File) {
+    return axios.put(`${this.apiUrl}${url}`, body, { headers: this.headers })
+  }
+
   private getEntities(entity: GrocyEntity) {
     return this.axiosGet(`/objects/${entity}`)
+  }
+
+  private postEntities(entity: GrocyEntity, body: Record<string, unknown>) {
+    return this.axiosPost(`/objects/${entity}`, body)
   }
 
   async getProducts() {
@@ -41,6 +52,42 @@ class GrocyClient {
     const entities = await this.getEntities("quantity_units")
     return GrocyQuantityUnit.array().parse(entities.data)
   }
+
+  async createRecipe(input: Omit<GrocyRecipe, "id">) {
+    GrocyRecipe.omit({ id: true }).parse(input)
+
+    console.log(`Creating recipe: ${JSON.stringify(input)}`)
+
+    const recipe = await this.postEntities("recipes", input)
+
+    console.log(JSON.stringify(recipe.data))
+    return GrocyCreationResponse.parse(recipe.data)
+  }
+
+  async createRecipePos(input: Omit<GrocyRecipePos, "id">) {
+    GrocyRecipePos.omit({ id: true }).parse(input)
+
+    console.log(`Creating recipe ingredient: ${JSON.stringify(input)}`)
+
+    const recipePos = await this.postEntities("recipes_pos", input)
+    console.log(JSON.stringify(recipePos.data))
+    return GrocyCreationResponse.parse(recipePos.data)
+  }
+
+  async uploadRecipeImageFile(file: File) {
+    const fileNameB64 = btoa(file.name)
+
+    const uploadedFile = await this.axiosPut(
+      `/recipepictures/${fileNameB64}`,
+      file
+    )
+
+    return uploadedFile
+  }
 }
 
-export const grocyClient = new GrocyClient(env.GROCY_API_KEY, env.GROCY_API_URL)
+export const grocyClient = new GrocyClient(
+  env.GROCY_API_KEY,
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  `${env.NEXT_PUBLIC_GROCY_URL}/api`
+)
