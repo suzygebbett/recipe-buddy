@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button"
 import { env } from "@/env.mjs"
 import { sentenceCase } from "sentence-case"
 import {
-  DraftIngredient,
+  type DraftIngredient,
   useRecipeBuilder,
   useRowEditing,
 } from "@/hooks/useRecipeBuilder"
@@ -54,7 +54,7 @@ function AddRecipeButton() {
 
   const addMut = api.grocy.addRecipeToGrocy.useMutation({
     onSuccess: () => {
-      router.push("/")
+      void router.push("/")
     },
   })
 
@@ -193,6 +193,7 @@ function CreateProductButton({
       () => {
         if (!document.hidden) {
           utils.grocy.products.fetch().then((data) => {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const newProd = data.sort(
               (a, b) => parseInt(b.id, 10) - parseInt(a.id, 10)
             )[0]!

@@ -1,0 +1,44 @@
+version: "3.9"
+services:
+  db:
+    image: "postgres"
+    networks:
+      - recipe-buddy
+    volumes:
+      - '../../.local/data/postgres:/var/lib/postgresql/data'
+    restart: always
+#    ports:
+#      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: recipe-buddy
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  app:
+    platform: "linux/amd64"
+    networks:
+      - recipe-buddy
+    depends_on:
+      db:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_GROCY_URL: "https://test-r6aira2jrtr52y34eks6.demo.grocy.info"
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    image: t3-app
+    environment:
+      GROCY_API_KEY: "bMSJRlURCPkG5tMW8xpnZYXS6dAYXmMM4ROomYrm7VX6rv8R7m"
+      NEXTAUTH_SECRET: "V4hed/fSVED8LMlRg2cgUmUAACBY0vNCjXtqiKkgzfI="
+      NEXTAUTH_URL: "http://localhost:3000"
+      DATABASE_URL: "postgresql://postgres:password@db:5432/recipe-buddy"
+
+networks:
+  recipe-buddy:

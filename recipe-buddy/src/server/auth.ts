@@ -41,14 +41,12 @@ export const authOptions: NextAuthOptions = {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(creds, req) {
+      async authorize(creds) {
         if (!creds) throw new Error("No credentials")
 
-        const user = await prisma.user.findUnique({
+        return prisma.user.findUnique({
           where: { username: creds.username },
         })
-
-        return user
       },
     }),
   ],
