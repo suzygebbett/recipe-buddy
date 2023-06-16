@@ -65,9 +65,11 @@ const Home: NextPage = () => {
                 <Card key={a.id}>
                   <CardHeader>
                     {a.imageUrl && (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={a.imageUrl}
                         className="max-h-xs max-w-xs object-scale-down"
+                        alt={`Photo of ${a.title}`}
                       />
                     )}
                     <CardTitle>{a.title}</CardTitle>

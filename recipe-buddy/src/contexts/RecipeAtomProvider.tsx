@@ -1,8 +1,13 @@
 import { atomWithImmer } from "jotai-immer"
-import { DraftRecipe } from "@/hooks/useRecipeBuilder"
-import { createContext, PropsWithChildren, useContext, useMemo } from "react"
+import type { DraftRecipe } from "@/hooks/useRecipeBuilder"
+import {
+  createContext,
+  type PropsWithChildren,
+  useContext,
+  useMemo,
+} from "react"
 import { useAtom } from "jotai/react"
-import { RouterOutputs } from "@/utils/api"
+import { type RouterOutputs } from "@/utils/api"
 
 type DbRecipe = RouterOutputs["recipe"]["getById"]
 
@@ -35,7 +40,10 @@ export const RecipeEditingProvider = ({
   initialState,
   children,
 }: PropsWithChildren<{ initialState: DbRecipe }>) => {
-  const recipeAtom = useMemo(() => createRecipeAtom(initialState), [])
+  const recipeAtom = useMemo(
+    () => createRecipeAtom(initialState),
+    [initialState]
+  )
 
   return (
     <RecipeAtomContext.Provider value={recipeAtom}>

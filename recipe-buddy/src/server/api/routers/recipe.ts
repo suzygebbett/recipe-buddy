@@ -15,7 +15,7 @@ export const recipeRouter = createTRPCRouter({
     }),
   getById: protectedProcedure
     .input(z.object({ recipeId: z.string().cuid() }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       return prisma.recipe.findUniqueOrThrow({
         where: { id: input.recipeId },
         include: { steps: true, ingredients: true },

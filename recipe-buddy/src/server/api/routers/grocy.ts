@@ -4,7 +4,6 @@ import {
 } from "@recipe-buddy/server/api/trpc"
 import { grocyClient } from "@recipe-buddy/server/integrations/grocy/grocy"
 import { GrocyRecipeInput } from "@/server/integrations/grocy/types"
-import axios from "axios"
 import { prisma } from "@/server/db"
 
 export const grocyRouter = createTRPCRouter({

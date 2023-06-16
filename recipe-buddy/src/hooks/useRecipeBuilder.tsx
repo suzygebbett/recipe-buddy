@@ -1,3 +1,5 @@
+/* eslint @typescript-eslint/no-non-null-assertion: 0 */
+
 import { useRecipeEditAtom } from "@/contexts/RecipeAtomProvider"
 import {
   GrocyIngredientInput,
@@ -25,7 +27,7 @@ export type DraftRecipe = {
 }
 
 export function useRecipeBuilder() {
-  const [recipe, setRecipe] = useRecipeEditAtom()
+  const [recipe] = useRecipeEditAtom()
 
   const constructRecipeInput = (): GrocyRecipeInput => ({
     dbId: recipe.dbId,
